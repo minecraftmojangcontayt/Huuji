@@ -161,33 +161,17 @@ function setFling(on)
 	end
 end
 
-function setAimbot(on)
+function setAimbot(state)
     if aimbotConn then
         RunService:UnbindFromRenderStep("Aimbot")
         aimbotConn = nil
     end
 
-    if on then
+    if state then
         aimbotConn = true
         RunService:BindToRenderStep("Aimbot", Enum.RenderPriority.Camera.Value + 1, function()
             if not states.Aimbot then return end
-            local closest, shortest = nil, math.huge
-            for _, plr in ipairs(Players:GetPlayers()) do
-                if plr ~= player and plr.Character and plr.Character:FindFirstChild("Head") then
-                    local head = plr.Character.Head
-                    local pos, vis = Camera:WorldToViewportPoint(head.Position)
-                    if vis then
-                        local dist = (Vector2.new(pos.X, pos.Y) - UIS:GetMouseLocation()).Magnitude
-                        if dist < shortest then
-                            shortest = dist
-                            closest = head
-                        end
-                    end
-                end
-            end
-            if closest then
-                Camera.CFrame = CFrame.new(Camera.CFrame.Position, closest.Position)
-            end
+            -- lógica de mira...
         end)
     end
 end
